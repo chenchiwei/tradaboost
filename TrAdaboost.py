@@ -61,11 +61,11 @@ def tradaboost(trans_S, trans_A, label_S, label_A, test, N):
         # 调整源域样本权重
         for j in range(row_S):
             weights[row_A + j] = weights[row_A + j] * np.power(bata_T[0, i],
-                                                               np.abs(result_label[row_A + j, i] - label_S[j]))
+                                                               (-np.abs(result_label[row_A + j, i] - label_S[j])))
 
         # 调整辅域样本权重
         for j in range(row_A):
-            weights[j] = weights[j] * np.power(bata, (-np.abs(result_label[j, i] - label_A[j])))
+            weights[j] = weights[j] * np.power(bata, np.abs(result_label[j, i] - label_A[j]))
     # print bata_T
     for i in range(row_T):
         # 跳过训练数据的标签
