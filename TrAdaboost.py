@@ -1,6 +1,7 @@
 # code by chenchiwei
 # -*- coding: UTF-8 -*- 
 import numpy as np
+import copy
 from sklearn import tree
 
 
@@ -28,7 +29,7 @@ def tradaboost(trans_S, trans_A, label_S, label_A, test, N):
 
     bata = 1 / (1 + np.sqrt(2 * np.log(row_A / N)))
 
-    # 存储每次迭代的标签和bata值？
+    # 存储每次迭代的标签和bata值
     bata_T = np.zeros([1, N])
     result_label = np.ones([row_A + row_S + row_T, N])
 
@@ -50,7 +51,11 @@ def tradaboost(trans_S, trans_A, label_S, label_A, test, N):
                                           weights[row_A:row_A + row_S, :])
         print 'Error rate:', error_rate
         if error_rate > 0.5:
-            error_rate = 0.5
+            error_rate = 1 - error_rate
+            # for a binary classifier 
+            # reverse the prediction label 0 to 1; 1 to 0.
+            pre_labels = copy.deepcopy(result_label[:, i])
+            result_label[:, i] = np.invert(pre_labels)+2
         if error_rate == 0:
             N = i
             break  # 防止过拟合
