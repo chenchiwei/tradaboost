@@ -1,6 +1,7 @@
 # code by chenchiwei
 # -*- coding: UTF-8 -*- 
 import numpy as np
+import copy 
 from sklearn import tree
 
 
@@ -50,7 +51,11 @@ def tradaboost(trans_S, trans_A, label_S, label_A, test, N):
                                           weights[row_A:row_A + row_S, :])
         print 'Error rate:', error_rate
         if error_rate > 0.5:
-            error_rate = 0.5
+            # for a binary classifier 
+            # if error_rate > 0.5, assign prediction label 0 to 1, and vice versa.
+            error_rate = 1 - error_rate
+            pre_labels = copy.deepcopy(result_label[:, i])
+            result_label[:, i] = np.invert(pre_labels) + 2
         if error_rate == 0:
             N = i
             break  # 防止过拟合
